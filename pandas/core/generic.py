@@ -3124,6 +3124,10 @@ class NDFrame(PandasObject):
                 # fill in 2d chunks
                 result = dict([(col, s.fillna(method=method, value=value))
                                for col, s in self.iteritems()])
+                if inplace:
+                  new_obj = self._constructor.from_dict(result).__finalize__(self)
+                  self._update_inplace(new_obj._data)
+                  return
                 return self._constructor.from_dict(result).__finalize__(self)
 
             # 2d or less
